@@ -1,0 +1,2 @@
+#Defaut off, because it doesn't work very well
+inventorybags_enable_item_teleportation_bag(Enable Item Teleportation Bag) bool false

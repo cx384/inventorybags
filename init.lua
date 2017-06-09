@@ -1,0 +1,8 @@
+local modpath = minetest.get_modpath("inventorybags")
+dofile(modpath .. "/globaltables.lua")
+dofile(modpath .. "/craftitems.lua")
+dofile(modpath .. "/bags.lua")
+dofile(modpath .. "/devices.lua")
+dofile(modpath .. "/sort_inventory_function.lua")
+dofile(modpath .. "/upgrades.lua")
+dofile(modpath .. "/crafting.lua")
