@@ -11,9 +11,9 @@ local function register_upgrade(data)
 	end
 	local setting = ""
 	if not data.help_setting then
-		setting = "Setting: Irrelevant"
+		setting = "#7bff00Setting:,Irrelevant"
 	else
-		setting = "Setting: " .. data.help_setting
+		setting = "#7bff00Setting:," .. data.help_setting
 	end
 	
 	inventorybags.bud_recipes[data.name] = {
@@ -26,8 +26,8 @@ local function register_upgrade(data)
 		
 	inventorybags.upgrade_help_string = 
 		inventorybags.upgrade_help_string .."," ..
-		data.description .. ": ".. data.help .. "," ..
-		"     " .. setting .. ","
+		"#ffa500" .. data.description .. ": ,".. data.help .. "," ..
+		setting .. ","
 end
 
 local function string_list_to_table(setstring)
@@ -268,7 +268,13 @@ function inventorybags.on_open_bag(bagstack, baginv, player)
 end
 
 minetest.register_on_dignode(function(pos, oldnode, digger)
+	if not digger then
+		return
+	end
 	local inv = digger:get_inventory()
+	if not inv then
+		return
+	end
 	local drops = minetest.get_node_drops(oldnode.name, digger:get_wielded_item())
 	local size = inv:get_size("main")
 	local done_coll = false
@@ -544,7 +550,13 @@ register_upgrade({
 })
 
 minetest.register_on_placenode(function(pos, newnode, placer, oldnode, itemstack, pointed_thing)
+	if not placer then
+		return
+	end
 	local inv = placer:get_inventory()
+	if not inv then
+		return
+	end
 	local size = inv:get_size("main")
 	for i = 1, size, 1 do
 		local bagstack = inv:get_stack("main", i)
@@ -570,4 +582,89 @@ minetest.register_on_placenode(function(pos, newnode, placer, oldnode, itemstack
 		end
 	end
 end)
+
+-- Explosion Upgrade
+
+local enable_tnt = minetest.settings:get_bool("enable_tnt")
+if enable_tnt == nil then
+	enable_tnt = minetest.is_singleplayer()
+end
+
+if minetest.get_modpath("tnt") and enable_tnt then
+
+	register_upgrade({
+		name = "inventorybags:explosion_upgrade",
+		description = "Explosion Upgrade",
+		inventory_image = "inventorybags_upgrade_base.png^inventorybags_explosion_upgrade.png",
+		meta_name = "inventorybags_explosion_upgrade",
+		help = "If you drop your bag it explodes after some time. ( You will lose the bag. ),"..
+			"You can also hold sneak and left click to blast the bag instantly.,"..
+			"The explosion radius depends on how much TNT do you have in your bag.",
+		setting_meta_name = "inventorybags_explosion_upgrade_time",
+		help_setting = 'The time before the bag explodes in seconds (1-30). (default 4)'
+	})
+	
+	local old_on_drop_bag = inventorybags.on_drop_bag
+	function inventorybags.on_drop_bag(itemstack, dropper, pos)
+		local meta = itemstack:get_meta()
+		if meta:get_string("inventorybags_explosion_upgrade") == "true" then
+			local dtime = tonumber(meta:get_string("inventorybags_explosion_upgrade_time")) or 4
+			if dtime > 30 then
+				dtime = 30
+			end
+			local itemname = itemstack:get_name()
+			local color = meta:get_string("color") or ""
+			if color ~= "" and string.len(color) == 7 and string.sub(color,1,1) == "#" then
+				color = "^[multiply:"..color
+			else
+				color = ""
+			end
+			local def = {}
+			local tnt_radius = tonumber(minetest.settings:get("tnt_radius") or 3)
+			local n = 0  --n >= 1
+			local old_itemstack = itemstack
+			while old_itemstack do
+				n = n + 1
+				old_itemstack = inventorybags.bag_inv_remove_item(itemstack, "tnt:tnt")
+			end
+			itemstack:take_item()
+			def.radius = tnt_radius*(n^(1/3))
+			def.damage_radius = def.radius * 2
+			minetest.sound_play("tnt_ignite", {pos = pos})
+			minetest.after(dtime, tnt.boom, pos, def)
+			minetest.add_particle({
+				pos = pos,
+				expirationtime = dtime,
+				size = def.radius * 2,
+				collisiondetection = false,
+				vertical = false,
+				texture = minetest.registered_items[itemname].inventory_image..color,
+			})
+			return itemstack, dropper, pos
+		end
+		return old_on_drop_bag(itemstack, dropper, pos)
+	end
+	
+	local old_on_use_bag = inventorybags.on_use_bag
+	function inventorybags.on_use_bag(itemstack, user, pointed_thing)
+		local meta = itemstack:get_meta()
+		if meta:get_string("inventorybags_explosion_upgrade") == "true" and user:get_player_control().sneak == true then
+			local pos = user:get_pos()
+			local def = {}
+			local tnt_radius = tonumber(minetest.settings:get("tnt_radius") or 3)
+			local n = 0  --n >= 1
+			local old_itemstack = itemstack
+			while old_itemstack do
+				n = n + 1
+				old_itemstack = inventorybags.bag_inv_remove_item(itemstack, "tnt:tnt")
+			end
+			itemstack:take_item()
+			def.radius = tnt_radius*(n^(1/3))
+			def.damage_radius = def.radius * 2
+			tnt.boom(pos, def)
+			return itemstack, dropper, pos
+		end
+		return old_on_use_bag(itemstack, user, pointed_thing)
+	end
+end
 

@@ -448,7 +448,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 	local budinvname = "inventorybags_"..playername.."_bud"
 	if formname == spininvname then
 		if fields.spin then
-			minetest.sound_play("inventorybags_spinning_wheel", {gain = 0.8, pos = player:get_pos(), max_hear_distance = 5})
+			minetest.sound_play("inventorybags_spinning_wheel", {gain = 0.8, object = player, max_hear_distance = 5})
 			while minetest.get_item_group(inv:get_stack(spininvname.."_in", 1):get_name(), "wool") > 0 and 
 					inv:room_for_item(spininvname.."_out", "inventorybags:yarn") do
 				inv:remove_item(spininvname.."_in", inv:get_stack(spininvname.."_in", 1):get_name())
@@ -461,7 +461,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 		end
 	elseif formname == loominvname then
 		if fields.weave then
-			minetest.sound_play("inventorybags_loom", {gain = 0.5, pos = player:get_pos(), max_hear_distance = 5})
+			minetest.sound_play("inventorybags_loom", {gain = 0.5, object = player, max_hear_distance = 5})
 			while inv:get_stack(loominvname.."_in", 1):get_name() == "inventorybags:yarn" and 
 					inv:get_stack(loominvname.."_in", 2):get_name() == "inventorybags:yarn" and
 					inv:room_for_item(loominvname.."_out", "inventorybags:fabric") do
@@ -527,7 +527,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 					if bud_recipe.setting_meta_name then
 						meta:set_string(bud_recipe.setting_meta_name, fields.setting)
 					end
-					minetest.sound_play("inventorybags_bud_upgrade", {gain = 0.8, pos = player:get_pos(), max_hear_distance = 5})
+					minetest.sound_play("inventorybags_bud_upgrade", {gain = 0.8, object = player, max_hear_distance = 5})
 					upgradestack:set_count(upgradestack:get_count()-1)
 					inv:set_stack(budinvname.."_bag", 1, "")
 					inv:set_stack(budinvname.."_upgrade", 1, upgradestack)
@@ -537,7 +537,8 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 		elseif fields.extract then
 			if inv:is_empty(budinvname.."_out") and 
 					bagstack ~= nil and
-					minetest.get_item_group(bagstack:get_name(), "bag") > 0	then
+					minetest.get_item_group(bagstack:get_name(), "bag") > 0	and 
+					bagstack:get_count() == 1 then
 				local meta = bagstack:get_meta()
 				local upgrade_history = meta:get_string("inventorybags_upgrade_history")
 				local cpos = string.find(upgrade_history, ",")
@@ -550,7 +551,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 						if bud_recipe.setting_meta_name then
 							meta:set_string(bud_recipe.setting_meta_name, "")
 						end
-						minetest.sound_play("inventorybags_bud_extract", {gain = 0.8, pos = player:get_pos(), max_hear_distance = 5})
+						minetest.sound_play("inventorybags_bud_extract", {gain = 0.8, object = player, max_hear_distance = 5})
 						inv:add_item(budinvname.."_upgrade", upgrade_name)
 						inv:set_stack(budinvname.."_bag", 1, "")
 						inv:set_stack(budinvname.."_out", 1, bagstack)

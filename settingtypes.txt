@@ -1,2 +1,5 @@
-#Defaut off, because it doesn't work very well
+# Defaut off, because it doesn't work very well
 inventorybags_enable_item_teleportation_bag(Enable Item Teleportation Bag) bool false
+
+# Used to dialable the Bag of Winds
+inventorybags_dialable_bag_of_winds(Dialables the Bag of Winds) bool false

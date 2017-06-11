@@ -69,6 +69,12 @@ function inventorybags.on_use_bag(itemstack, user, pointed_thing)
 	return itemstack, user, pointed_thing
 end
 
+-- called on drop bag
+function inventorybags.on_drop_bag(itemstack, dropper, pos)
+	minetest.item_drop(itemstack, dropper, pos)
+	return itemstack, dropper, pos
+end
+
 
 local function save_bag_inv_itemstack(inv, stack)
 	stack, inv = inventorybags.on_change_bag_inv(stack, inv)
@@ -191,7 +197,7 @@ local function open_bag(itemstack, user, width, height, sound)
 	end
 	
 	if sound then
-		minetest.sound_play(sound, {gain = 0.8, pos = user:get_pos(), max_hear_distance = 5})
+		minetest.sound_play(sound, {gain = 0.8, object = user, max_hear_distance = 5})
 	end
 	minetest.show_formspec(playername, invname, get_formspec(invname, width, height))
 	return itemstack
@@ -257,6 +263,9 @@ function inventorybags.register_bag(name, bagtable)
 		end,
 		on_use = function(itemstack, user, pointed_thing)
 			return inventorybags.on_use_bag(itemstack, user, pointed_thing)
+		end,
+		on_drop = function(itemstack, dropper, pos)
+			return inventorybags.on_drop_bag(itemstack, dropper, pos)
 		end
 	})
 	
@@ -266,7 +275,7 @@ function inventorybags.register_bag(name, bagtable)
 			if fields.quit then
 				player, fields, name, formname, sound = inventorybags.on_close_bag(player, fields, name, formname, bagtable.sound_close)
 				if bagtable.sound_close then
-					minetest.sound_play(sound, {gain = 0.8, pos = player:get_pos(), max_hear_distance = 5})
+					minetest.sound_play(sound, {gain = 0.8, object = player, max_hear_distance = 5})
 				end
 			end
 		end
@@ -409,6 +418,9 @@ minetest.register_craftitem("inventorybags:bag_transporting_bag", {
 	end,
 	on_use = function(itemstack, user, pointed_thing)
 		return inventorybags.on_use_bag(itemstack, user, pointed_thing)
+	end,
+	on_drop = function(itemstack, dropper, pos)
+		return inventorybags.on_drop_bag(itemstack, dropper, pos)
 	end
 })
 
@@ -417,7 +429,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 	if nisformn == 1 then
 		if fields.quit then
 			player, fields, name, formname, sound = inventorybags.on_close_bag(player, fields, name, formname, "inventorybags_close_bag")
-			minetest.sound_play(sound, {gain = 0.8, pos = player:get_pos(), max_hear_distance = 5})
+			minetest.sound_play(sound, {gain = 0.8, object = player, max_hear_distance = 5})
 		end
 	end
 	return
@@ -428,7 +440,7 @@ if minetest.setting_getbool("inventorybags_enable_item_teleportation_bag") then
 	local function open_teleport_bag_inv(itemstack, placer, pointed_thing)
 		local location = minetest.deserialize(itemstack:get_meta():get_string("inventorybags_formspec_location"))
 		if location then
-			minetest.sound_play("inventorybags_open_teleportation_bag", {gain = 0.8, pos = placer:get_pos(), max_hear_distance = 5})
+			minetest.sound_play("inventorybags_open_teleportation_bag", {gain = 0.8, object = placer, max_hear_distance = 5})
 			local node = minetest.get_node(location)
 			-- load the area
 			local vmie, vmae = VoxelManip():read_from_map(location, location)
@@ -479,7 +491,7 @@ if minetest.setting_getbool("inventorybags_enable_item_teleportation_bag") then
 					)
 				end
 			else
-				minetest.chat_send_player(user:get_player_name(), "Hold sneak and right click to set the target of your Item Teleportation Bag")
+				minetest.chat_send_player(user:get_player_name(), "Hold sneak and left click to set the target of your Item Teleportation Bag")
 			end
 			return itemstack
 		end,
@@ -497,7 +509,7 @@ if minetest.setting_getbool("inventorybags_enable_item_teleportation_bag") then
 		local nisformn = string.find(formname, "inventorybags:item_teleportation_bag")
 		if nisformn == 1 then
 			if fields.quit then
-				minetest.sound_play("inventorybags_close_teleportation_bag", {gain = 0.8, pos = player:get_pos(), max_hear_distance = 5})
+				minetest.sound_play("inventorybags_close_teleportation_bag", {gain = 0.8, object = player, max_hear_distance = 5})
 			end
 		end
 		return
@@ -511,7 +523,7 @@ if minetest.get_modpath("xdecor") then
 		groups = {bag = 1},
 		
 		on_secondary_use = function(itemstack, user)
-			minetest.sound_play("inventorybags_open_teleportation_bag", {gain = 0.8, pos = user:get_pos(), max_hear_distance = 5})
+			minetest.sound_play("inventorybags_open_teleportation_bag", {gain = 0.8, object = user, max_hear_distance = 5})
 			minetest.show_formspec(user:get_player_name(), "inventorybags:ender_bag",
 				"size[8,9]" ..
 				default.gui_bg ..
@@ -527,7 +539,7 @@ if minetest.get_modpath("xdecor") then
 			return itemstack
 		end,
 		on_place = function(itemstack, placer, pointed_thing)
-			minetest.sound_play("inventorybags_open_teleportation_bag", {gain = 0.8, pos = placer:get_pos(), max_hear_distance = 5})
+			minetest.sound_play("inventorybags_open_teleportation_bag", {gain = 0.8, object = placer, max_hear_distance = 5})
 			minetest.show_formspec(placer:get_player_name(), "inventorybags:ender_bag",
 				"size[8,9]" ..
 				default.gui_bg ..
@@ -548,7 +560,7 @@ if minetest.get_modpath("xdecor") then
 		local nisformn = string.find(formname, "inventorybags:ender_bag")
 		if nisformn == 1 then
 			if fields.quit then
-				minetest.sound_play("inventorybags_close_teleportation_bag", {gain = 0.8, pos = player:get_pos(), max_hear_distance = 5})
+				minetest.sound_play("inventorybags_close_teleportation_bag", {gain = 0.8, object = player, max_hear_distance = 5})
 			end
 		end
 		return
@@ -562,7 +574,7 @@ if minetest.get_modpath("more_chests") then
 		groups = {bag = 1},
 		
 		on_secondary_use = function(itemstack, user)
-			minetest.sound_play("inventorybags_open_teleportation_bag", {gain = 0.8, pos = user:get_pos(), max_hear_distance = 5})
+			minetest.sound_play("inventorybags_open_teleportation_bag", {gain = 0.8, object = user, max_hear_distance = 5})
 			minetest.show_formspec(user:get_player_name(), "inventorybags:wifi_bag",
 				"size[8,9]" ..
 				default.gui_bg ..
@@ -578,7 +590,7 @@ if minetest.get_modpath("more_chests") then
 			return itemstack
 		end,
 		on_place = function(itemstack, placer, pointed_thing)
-			minetest.sound_play("inventorybags_open_teleportation_bag", {gain = 0.8, pos = placer:get_pos(), max_hear_distance = 5})
+			minetest.sound_play("inventorybags_open_teleportation_bag", {gain = 0.8, object = placer, max_hear_distance = 5})
 			minetest.show_formspec(placer:get_player_name(), "inventorybags:wifi_bag",
 				"size[8,9]" ..
 				default.gui_bg ..
@@ -598,7 +610,7 @@ if minetest.get_modpath("more_chests") then
 		local nisformn = string.find(formname, "inventorybags:wifi_bag")
 		if nisformn == 1 then
 			if fields.quit then
-				minetest.sound_play("inventorybags_close_teleportation_bag", {gain = 0.8, pos = player:get_pos(), max_hear_distance = 5})
+				minetest.sound_play("inventorybags_close_teleportation_bag", {gain = 0.8, object = player, max_hear_distance = 5})
 			end
 		end
 		return
@@ -606,32 +618,113 @@ if minetest.get_modpath("more_chests") then
 end
 
 if minetest.get_modpath("beds") then
-
-	local function play_sleeping_sound(player)
-		local n = math.random(4)
-		local sound = "inventorybags_yawn1"
-		if n == 1 then 
-			sound = "inventorybags_yawn2"
-		elseif n == 2 then 
-				sound = "inventorybags_snoring1"
-		elseif n == 3 then 
-			sound = "inventorybags_snoring2"
-		end
-		minetest.sound_play(sound, {gain = 1, pos = player:get_pos(), max_hear_distance = 5})
-	end
-
 	minetest.register_craftitem("inventorybags:sleeping_bag", {
 		description = "Sleeping Bag",
 		inventory_image = "inventorybags_sleeping_bag.png",
 		groups = {bag = 1},
 		
 		on_secondary_use = function(itemstack, user)
-			play_sleeping_sound(user)
+			minetest.sound_play("inventorybags_sleeping", {gain = 1, object = user, max_hear_distance = 5})
 			beds.on_rightclick(user:get_pos(), user)
 		end,
 		on_place = function(itemstack, placer, pointed_thing)
-			play_sleeping_sound(placer)
+			minetest.sound_play("inventorybags_sleeping", {gain = 1, object = placer, max_hear_distance = 5})
 			beds.on_rightclick(placer:get_pos(), placer)
 		end
 	})
 end
+
+if not minetest.setting_getbool("inventorybags_dialable_bag_of_winds") then
+
+	local gravity_change = -1.5
+
+	local function set_physics_normal(player)
+		local physics = player:get_physics_override()
+		physics.gravity = 1
+		physics.speed = 1
+		player:set_physics_override(physics)
+	end
+	
+	local function set_physics_normal_inv_check(player, extratable)
+		if player:get_wielded_item():get_name() == "inventorybags:bag_of_winds_opened" then
+			minetest.after(1, set_physics_normal_inv_check, player, extratable)
+		else
+			set_physics_normal(player)
+			minetest.sound_stop(extratable.handle)
+			local inv = player:get_inventory()
+			local lostbag = false
+			while inv:contains_item("main", "inventorybags:bag_of_winds_opened") do
+				lostbag = true
+				local itemstack = inv:remove_item("main", "inventorybags:bag_of_winds_opened")
+				itemstack:set_name("inventorybags:bag_of_winds_closed")
+				minetest.item_drop(itemstack, player, player:get_pos())
+			end
+			while inv:contains_item("craft", "inventorybags:bag_of_winds_opened") do
+				lostbag = true
+				local itemstack = inv:remove_item("craft", "inventorybags:bag_of_winds_opened")
+				itemstack:set_name("inventorybags:bag_of_winds_closed")
+				minetest.item_drop(itemstack, player, player:get_pos())
+			end
+			if lostbag then
+				minetest.chat_send_player(player:get_player_name(), "You lost your Bag of Winds.")
+			end
+		end
+	end
+	
+	local function set_new_physics(player, itemstack)
+		local physics = player:get_physics_override()
+		local extratable = {}
+		extratable.handle = minetest.sound_play("inventorybags_wind", {gain = 1, object = player, max_hear_distance = 5})
+		physics.gravity = 1*gravity_change+physics.gravity
+		player:set_physics_override(physics)
+		minetest.after(1, set_physics_normal_inv_check, player, extratable)
+	end
+
+	local function open_bag_of_winds(player, itemstack)
+		local meta = itemstack:get_meta()
+		set_new_physics(player, itemstack)
+		itemstack:set_name("inventorybags:bag_of_winds_opened")
+		return itemstack
+	end
+	
+	local function close_bag_of_winds(player, itemstack)
+		set_physics_normal(player)
+		itemstack:set_name("inventorybags:bag_of_winds_closed")
+		return itemstack
+	end
+	
+	minetest.register_craftitem("inventorybags:bag_of_winds_closed", {
+		description = "Bag of Winds",
+		inventory_image = "inventorybags_bag_of_winds_closed.png",
+		groups = {bag = 1},
+		on_secondary_use = function(itemstack, user, pointed_thing)
+			itemstack = open_bag_of_winds(user, itemstack)
+			return itemstack
+		end,
+		on_place = function(itemstack, placer, pointed_thing)
+			itemstack = open_bag_of_winds(placer, itemstack)
+			return itemstack
+		end,
+	})
+	
+	minetest.register_craftitem("inventorybags:bag_of_winds_opened", {
+		description = "Bag of Winds",
+		inventory_image = "inventorybags_bag_of_winds_opened.png",
+		groups = {bag = 1, not_in_creative_inventory = 1},
+		on_secondary_use = function(itemstack, user, pointed_thing)
+			itemstack = close_bag_of_winds(user, itemstack)
+			return itemstack
+		end,
+		on_place = function(itemstack, placer, pointed_thing)
+			itemstack = close_bag_of_winds(placer, itemstack)
+			return itemstack
+		end,
+		on_drop = function(itemstack, dropper, pos)
+			itemstack:set_name("inventorybags:bag_of_winds_closed")
+			minetest.item_drop(itemstack, dropper, pos)
+			return itemstack
+		end
+	})
+end
+
+

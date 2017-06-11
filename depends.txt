@@ -11,3 +11,4 @@ beds?
 pipeworks?
 homedecor?
 node_texture_modifier?
+tnt?

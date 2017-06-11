@@ -1,12 +1,12 @@
 inventorybags = {}
 inventorybags.bud_recipes = {}
-inventorybags.upgrade_help_string = "General Info:," ..
+inventorybags.upgrade_help_string = "#ffff00General Info:," ..
 	"Sometimes you have to have opened the bag the first time before the upgrade works.,"..
 	"Each bag can have only one upgrade of every kind.,"..
 	"You must put the upgrade into the upgrade slot before you can use the setting creator.," ..
-	"Some upgrades don't work on special bags.," ..
-	"You can upgrade only one bag at once.," ..
-	",Bag Upgrades:,"
+	"Most upgrades don't work on special bags.," ..
+	"You can upgrade and extract only one bag at once.," ..
+	",#ffff00Bag Upgrades:,"
 inventorybags.named_colors = {}
 
 local colors = {}

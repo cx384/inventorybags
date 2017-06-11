@@ -46,24 +46,29 @@ License:
 			inventorybags_bud_extract.ogg
 	
 		whouser ( CC BY-NC 3.0 ) ( http://www.freesound.org/people/whouser/sounds/377795/ ):
-			inventorybags_snoring1.ogg
+			inventorybags_sleeping.1.ogg
 	
 		monkslut ( CC BY 3.0 ) ( http://www.freesound.org/people/monkslut/sounds/35208/ ):
-			inventorybags_snoring2.ogg
+			inventorybags_sleeping.2.ogg
 	
 		Robinhood76 ( CC BY-NC 3.0 ) ( http://www.freesound.org/people/Robinhood76/sounds/68458/ ):
-			inventorybags_yawn1.ogg
+			inventorybags_sleeping.3.ogg
 	
 		Fortyseven203 ( CC0 1.0 ) ( http://www.freesound.org/people/Fortyseven203/sounds/240139/ ):
-			inventorybags_yawn2.ogg
+			inventorybags_sleeping.4.ogg
 	
-		stransky ( CC0 1.0 ) ( http://www.freesound.org/people/stransky/sounds/380065/# ):
+		stransky ( CC0 1.0 ) ( http://www.freesound.org/people/stransky/sounds/380065/ ):
 		(part)
 			inventorybags_spinning_wheel.ogg
 	
 		mar1o ( CC BY 3.0 ) ( http://www.freesound.org/people/mar1o/sounds/164117/ ):
 		(part)
 			inventorybags_loom.ogg
+		
+		Cyril Laurier ( CC BY 3.0 ) ( http://www.freesound.org/people/Cyril%20Laurier/sounds/17645/ ) :
+		(split)
+			inventorybags_wind.1.ogg
+			inventorybags_wind.2.ogg
 		
 		Everything else:
 		cx384 ( CC-BY-SA-4.0 )

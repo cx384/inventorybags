@@ -188,6 +188,14 @@ minetest.register_craft({
 	}
 })
 
+if minetest.registered_items["inventorybags:explosion_upgrade"] then
+	minetest.register_craft({
+		type = "shapeless",
+		output = 'inventorybags:explosion_upgrade',
+		recipe = {"inventorybags:upgrade_base", "tnt:gunpowder", "tnt:tnt"},
+	})
+end
+
 minetest.register_craft({
 	output = 'inventorybags:storage_upgrade_tier_1',
 	recipe = {
@@ -405,5 +413,15 @@ if minetest.get_modpath("beds") then
 		type = "shapeless",
 		output = 'inventorybags:sleeping_bag',
 		recipe = {"inventorybags:large_pouch", "group:bed"},
+	})
+end
+if not minetest.setting_getbool("inventorybags_dialable_bag_of_winds") then
+	minetest.register_craft({
+		output = 'inventorybags:bag_of_winds_closed',
+		recipe = {
+			{"default:goldblock", "inventorybags:large_pouch", "default:goldblock"},
+			{"default:diamondblock", "default:mese", "default:diamondblock"},
+			{"default:diamondblock", "default:mese", "default:diamondblock"}
+		},
 	})
 end
