@@ -674,7 +674,7 @@ if not minetest.setting_getbool("inventorybags_dialable_bag_of_winds") then
 	local function set_new_physics(player, itemstack)
 		local physics = player:get_physics_override()
 		local extratable = {}
-		extratable.handle = minetest.sound_play("inventorybags_wind", {gain = 1, object = player, max_hear_distance = 5})
+		extratable.handle = minetest.sound_play("inventorybags_wind", {gain = 1, object = player, max_hear_distance = 5, loop = true})
 		physics.gravity = 1*gravity_change+physics.gravity
 		player:set_physics_override(physics)
 		minetest.after(1, set_physics_normal_inv_check, player, extratable)
