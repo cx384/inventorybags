@@ -641,7 +641,6 @@ if not minetest.setting_getbool("inventorybags_dialable_bag_of_winds") then
 	local function set_physics_normal(player)
 		local physics = player:get_physics_override()
 		physics.gravity = 1
-		physics.speed = 1
 		player:set_physics_override(physics)
 	end
 	
