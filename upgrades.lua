@@ -275,7 +275,7 @@ minetest.register_on_dignode(function(pos, oldnode, digger)
 	if not inv then
 		return
 	end
-	local drops = minetest.get_node_drops(oldnode.name, digger:get_wielded_item())
+	local drops = minetest.get_node_drops(oldnode.name, digger:get_wielded_item():get_name())
 	local size = inv:get_size("main")
 	local done_coll = false
 	local done_acoll = false
