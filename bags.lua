@@ -98,6 +98,21 @@ local function save_bag_inv(inv, player)
 	end
 end
 
+local function can_save_bag_inv(inv, player)
+	local playerinv = minetest.get_inventory{type="player", name=player:get_player_name()}
+	local bag_id = inv:get_location().name
+	local listname = "main"
+	local size = playerinv:get_size(listname)
+	for i = 1, size, 1 do
+		local stack = playerinv:get_stack(listname, i)
+		local meta = stack:get_meta()
+		if meta:get_string("inventorybags_bag_identity") == bag_id then
+			return true
+		end
+	end
+	return false
+end
+
 local mod_storage = minetest.get_mod_storage()
 local function create_invname(itemstack)
 	local counter = mod_storage:get_int("counter", value) or 0
@@ -140,6 +155,20 @@ local function open_bag(itemstack, user, width, height, sound)
 	meta:set_int("inventorybags_height", height)
 	
 	local inv = minetest.create_detached_inventory(invname, {
+		 allow_move = function(inv, from_list, from_index, to_list, to_index, count, player)
+			if can_save_bag_inv(inv, player) then
+				return count
+			else
+				return 0
+			end
+		end,
+        allow_take = function(inv, listname, index, stack, player)
+			if can_save_bag_inv(inv, player) then
+				return stack:get_count()
+			else
+				return 0
+			end
+		end,
 		allow_put = function(inv, listname, index, stack, player)
 			if allow_bag_input then
 				if minetest.get_item_group(stack:get_name(), "bag_bag") > 0 then
@@ -149,6 +178,9 @@ local function open_bag(itemstack, user, width, height, sound)
 				if minetest.get_item_group(stack:get_name(), "bag") > 0 then
 					return 0
 				end
+			end
+			if not can_save_bag_inv(inv, player) then
+				return 0
 			end
 			return stack:get_count()
 		end,
