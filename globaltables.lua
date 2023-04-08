@@ -1,4 +1,3 @@
-inventorybags = {}
 inventorybags.bud_recipes = {}
 inventorybags.upgrade_help_string = "#ffff00General Info:," ..
 	"Sometimes you have to have opened the bag the first time before the upgrade works.,"..

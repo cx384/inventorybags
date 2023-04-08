@@ -1,4 +1,4 @@
-minetest.log(inventorybags.game)
+--minetest.log(inventorybags.game)
 
 local items = {
 	steel_ingot = {mtg = "default:steel_ingot", mcl = "mcl_core:iron_ingot"},
