@@ -1,28 +1,28 @@
 
 local function get_formspec(name, width, height)
-	local sizewidth = inventory_bags.width
+	local sizewidth = inventorybags.width
 	local txpos = (sizewidth-width)/2
-	if width >= inventory_bags.width then
+	if width >= inventorybags.width then
 		sizewidth = width
 		txpos = 0
 	end
 	local bag_formspec =
 		"size[".. sizewidth ..",".. height+5 .."]" ..
-		inventory_bags.gui_bg ..
-		inventory_bags.gui_bg_img ..
-		inventory_bags.gui_slots ..
+		inventorybags.gui_bg ..
+		inventorybags.gui_bg_img ..
+		inventorybags.gui_slots ..
 		"list[detached:"..name..";main;".. txpos ..",0;".. width ..",".. height ..";]"
-		if inventory_bags.game == "mtg" then
+		if inventorybags.game == "mtg" then
 			bag_formspec = bag_formspec..
-			"list[current_player;main;".. (sizewidth-inventory_bags.width)/2 ..",".. height+0.85 ..";"..inventory_bags.width..",1;]" ..
-			"list[current_player;main;".. (sizewidth-inventory_bags.width)/2 ..",".. height+2.08 ..";"..inventory_bags.width..",3;"..inventory_bags.width.."]"..
-			inventory_bags.get_hotbar_bg((sizewidth-inventory_bags.width)/2,height+0.85)
+			"list[current_player;main;".. (sizewidth-inventorybags.width)/2 ..",".. height+0.85 ..";"..inventorybags.width..",1;]" ..
+			"list[current_player;main;".. (sizewidth-inventorybags.width)/2 ..",".. height+2.08 ..";"..inventorybags.width..",3;"..inventorybags.width.."]"..
+			inventorybags.get_hotbar_bg((sizewidth-inventorybags.width)/2,height+0.85)
 		else
 			bag_formspec = bag_formspec..
-			"list[current_player;main;".. (sizewidth-inventory_bags.width)/2 ..",".. height+0.85 ..";"..inventory_bags.width..",3;"..inventory_bags.width.."]"..
-			mcl_formspec.get_itemslot_bg((sizewidth-inventory_bags.width)/2, height+0.85,inventory_bags.width,3)..
-			"list[current_player;main;".. (sizewidth-inventory_bags.width)/2 ..",".. height+4.08 ..";"..inventory_bags.width..",1;]"..
-			mcl_formspec.get_itemslot_bg((sizewidth-inventory_bags.width)/2, height+4.08,inventory_bags.width,1)..
+			"list[current_player;main;".. (sizewidth-inventorybags.width)/2 ..",".. height+0.85 ..";"..inventorybags.width..",3;"..inventorybags.width.."]"..
+			mcl_formspec.get_itemslot_bg((sizewidth-inventorybags.width)/2, height+0.85,inventorybags.width,3)..
+			"list[current_player;main;".. (sizewidth-inventorybags.width)/2 ..",".. height+4.08 ..";"..inventorybags.width..",1;]"..
+			mcl_formspec.get_itemslot_bg((sizewidth-inventorybags.width)/2, height+4.08,inventorybags.width,1)..
 			mcl_formspec.get_itemslot_bg(txpos, 0, width, height)
 		end
 		bag_formspec = bag_formspec..
@@ -565,19 +565,19 @@ if minetest.settings:get_bool("inventorybags_enable_item_teleportation_bag", fal
 	end)
 end
 
-if minetest.get_modpath("xdecor") or inventory_bags.game == "mcl" then
+if minetest.get_modpath("xdecor") or inventorybags.game == "mcl" then
 	local ender_chest_formspec
-	if inventory_bags.game == "mtg" then
+	if inventorybags.game == "mtg" then
 		ender_chest_formspec = "size[8,9]" ..
-		inventory_bags.gui_bg ..
-		inventory_bags.gui_bg_img ..
-		inventory_bags.gui_slots ..
+		inventorybags.gui_bg ..
+		inventorybags.gui_bg_img ..
+		inventorybags.gui_slots ..
 		"list[current_player;enderchest;0,0.3;8,4;]" ..
 		"list[current_player;main;0,4.85;8,1;]" ..
 		"list[current_player;main;0,6.08;8,3;8]" ..
 		"listring[current_player;enderchest]" ..
 		"listring[current_player;main]" ..
-		inventory_bags.get_hotbar_bg(0,4.85)
+		inventorybags.get_hotbar_bg(0,4.85)
 	else
 		ender_chest_formspec = "size[9,8.75]"..
 		"label[0,0;"..minetest.formspec_escape(minetest.colorize("#313131", "Ender Bag")).."]"..
@@ -628,15 +628,15 @@ if minetest.get_modpath("more_chests") then
 			minetest.sound_play("inventorybags_open_teleportation_bag", {gain = 0.8, object = user, max_hear_distance = 5})
 			minetest.show_formspec(user:get_player_name(), "inventorybags:wifi_bag",
 				"size[8,9]" ..
-				inventory_bags.gui_bg ..
-				inventory_bags.gui_bg_img ..
-				inventory_bags.gui_slots ..
+				inventorybags.gui_bg ..
+				inventorybags.gui_bg_img ..
+				inventorybags.gui_slots ..
 				"list[current_player;more_chests:wifi;0,0.3;8,4;]" ..
 				"list[current_player;main;0,4.85;8,1;]" ..
 				"list[current_player;main;0,6.08;8,3;8]" ..
 				"listring[current_player;more_chests:wifi]" ..
 				"listring[current_player;main]" ..
-				inventory_bags.get_hotbar_bg(0,4.85)
+				inventorybags.get_hotbar_bg(0,4.85)
 			)
 			return itemstack
 		end,
@@ -644,15 +644,15 @@ if minetest.get_modpath("more_chests") then
 			minetest.sound_play("inventorybags_open_teleportation_bag", {gain = 0.8, object = placer, max_hear_distance = 5})
 			minetest.show_formspec(placer:get_player_name(), "inventorybags:wifi_bag",
 				"size[8,9]" ..
-				inventory_bags.gui_bg ..
-				inventory_bags.gui_bg_img ..
-				inventory_bags.gui_slots ..
+				inventorybags.gui_bg ..
+				inventorybags.gui_bg_img ..
+				inventorybags.gui_slots ..
 				"list[current_player;more_chests:wifi;0,0.3;8,4;]" ..
 				"list[current_player;main;0,4.85;8,1;]" ..
 				"list[current_player;main;0,6.08;8,3;8]" ..
 				"listring[current_player;more_chests:wifi]" ..
 				"listring[current_player;main]" ..
-				inventory_bags.get_hotbar_bg(0,4.85)
+				inventorybags.get_hotbar_bg(0,4.85)
 			)
 			return itemstack
 		end
@@ -668,7 +668,7 @@ if minetest.get_modpath("more_chests") then
 	end)
 end
 
-if minetest.get_modpath("beds") or inventory_bags.game == "mcl" then
+if minetest.get_modpath("beds") or inventorybags.game == "mcl" then
 	local bedfunction = cause_an_error_if_this_isnt_set
 	if minetest.get_modpath("beds") then
 		bedfunction = function(player)
@@ -695,7 +695,7 @@ if minetest.get_modpath("beds") or inventory_bags.game == "mcl" then
 	})
 end
 
-if (not minetest.settings:get_bool("inventorybags_disable_bag_of_winds", false)) and (inventory_bags.game ~= "mcl") then
+if (not minetest.settings:get_bool("inventorybags_disable_bag_of_winds", false)) and (inventorybags.game ~= "mcl") then
 
 	local gravity_change = -1.5
 

@@ -1,4 +1,4 @@
-minetest.log(inventory_bags.game)
+minetest.log(inventorybags.game)
 
 local items = {
 	steel_ingot = {mtg = "default:steel_ingot", mcl = "mcl_core:iron_ingot"},
@@ -38,18 +38,18 @@ local items = {
 minetest.register_craft({
 	output = 'inventorybags:item_filter',
 	recipe = {
-		{items.steel_ingot[inventory_bags.game], 'group:stick', items.steel_ingot[inventory_bags.game]},
+		{items.steel_ingot[inventorybags.game], 'group:stick', items.steel_ingot[inventorybags.game]},
 		{'group:stick', 'inventorybags:fabric', 'group:stick'},
-		{items.steel_ingot[inventory_bags.game], 'group:stick', items.steel_ingot[inventory_bags.game]},
+		{items.steel_ingot[inventorybags.game], 'group:stick', items.steel_ingot[inventorybags.game]},
 	}
 })
 
 minetest.register_craft({
 	output = 'inventorybags:item_puller',
 	recipe = {
-		{items.steel_ingot[inventory_bags.game], items.gold_ingot[inventory_bags.game], items.steel_ingot[inventory_bags.game]},
-		{items.obsidian_glass[inventory_bags.game], 'inventorybags:item_filter', items.obsidian_glass[inventory_bags.game]},
-		{items.obsidian_glass[inventory_bags.game], '', items.obsidian_glass[inventory_bags.game]},
+		{items.steel_ingot[inventorybags.game], items.gold_ingot[inventorybags.game], items.steel_ingot[inventorybags.game]},
+		{items.obsidian_glass[inventorybags.game], 'inventorybags:item_filter', items.obsidian_glass[inventorybags.game]},
+		{items.obsidian_glass[inventorybags.game], '', items.obsidian_glass[inventorybags.game]},
 	}
 })
 
@@ -57,7 +57,7 @@ minetest.register_craft({
 	output = 'inventorybags:inventory_connecter',
 	recipe = {
 		{'inventorybags:fabric', 'inventorybags:fabric', 'inventorybags:fabric'},
-		{'inventorybags:item_puller', items.mese_crystal[inventory_bags.game], 'inventorybags:item_puller'},
+		{'inventorybags:item_puller', items.mese_crystal[inventorybags.game], 'inventorybags:item_puller'},
 		{'inventorybags:fabric', 'inventorybags:fabric', 'inventorybags:fabric'},
 	}
 })
@@ -85,7 +85,7 @@ minetest.register_craft({
 minetest.register_craft({
 	output = 'inventorybags:bud',
 	recipe = {
-		{'group:stick', items.mese_lamp[inventory_bags.game], ''},
+		{'group:stick', items.mese_lamp[inventorybags.game], ''},
 		{'group:stick', 'inventorybags:upgrade_base', ''},
 		{'group:wood', 'group:wood', 'group:wood'},
 	}
@@ -97,7 +97,7 @@ minetest.register_craft({
 	output = 'inventorybags:upgrade_base',
 	recipe = {
 		{'inventorybags:yarn', 'group:stick', 'inventorybags:yarn'},
-		{'group:stick', items.mese_crystal_fragment[inventory_bags.game], 'group:stick'},
+		{'group:stick', items.mese_crystal_fragment[inventorybags.game], 'group:stick'},
 		{'inventorybags:yarn', 'group:stick', 'inventorybags:yarn'},
 	}
 })
@@ -105,19 +105,19 @@ minetest.register_craft({
 minetest.register_craft({
 	type = "shapeless",
 	output = "inventorybags:rename_upgrade",
-	recipe = {"inventorybags:upgrade_base", items.paper[inventory_bags.game]},
+	recipe = {"inventorybags:upgrade_base", items.paper[inventorybags.game]},
 })
 
 minetest.register_craft({
 	type = "shapeless",
 	output = "inventorybags:coloring_upgrade",
-	recipe = {"inventorybags:upgrade_base", items.cyan_dye[inventory_bags.game], items.magenta_dye[inventory_bags.game], items.yellow_dye[inventory_bags.game], items.black_dye[inventory_bags.game], items.white_dye[inventory_bags.game]},
+	recipe = {"inventorybags:upgrade_base", items.cyan_dye[inventorybags.game], items.magenta_dye[inventorybags.game], items.yellow_dye[inventorybags.game], items.black_dye[inventorybags.game], items.white_dye[inventorybags.game]},
 })
 
 minetest.register_craft({
 	type = "shapeless",
 	output = "inventorybags:coloring_upgrade",
-	recipe = {"inventorybags:upgrade_base", items.red_dye[inventory_bags.game], items.green_dye[inventory_bags.game], items.blue_dye[inventory_bags.game], items.black_dye[inventory_bags.game], items.white_dye[inventory_bags.game]},
+	recipe = {"inventorybags:upgrade_base", items.red_dye[inventorybags.game], items.green_dye[inventorybags.game], items.blue_dye[inventorybags.game], items.black_dye[inventorybags.game], items.white_dye[inventorybags.game]},
 })
 
 if minetest.get_modpath("node_texture_modifier") then
@@ -131,18 +131,18 @@ end
 minetest.register_craft({
 	output = 'inventorybags:collecting_upgrade',
 	recipe = {
-		{items.steel_ingot[inventory_bags.game], 'inventorybags:upgrade_base', items.steel_ingot[inventory_bags.game]},
-		{items.steel_ingot[inventory_bags.game], 'inventorybags:item_puller', items.steel_ingot[inventory_bags.game]},
-		{items.obsidian_glass[inventory_bags.game], '', items.obsidian_glass[inventory_bags.game]},
+		{items.steel_ingot[inventorybags.game], 'inventorybags:upgrade_base', items.steel_ingot[inventorybags.game]},
+		{items.steel_ingot[inventorybags.game], 'inventorybags:item_puller', items.steel_ingot[inventorybags.game]},
+		{items.obsidian_glass[inventorybags.game], '', items.obsidian_glass[inventorybags.game]},
 	}
 })
 
 minetest.register_craft({
 	output = 'inventorybags:advanced_collecting_upgrade',
 	recipe = {
-		{items.steel_ingot[inventory_bags.game], 'inventorybags:collecting_upgrade', items.steel_ingot[inventory_bags.game]},
-		{items.steel_ingot[inventory_bags.game], 'inventorybags:item_puller', items.steel_ingot[inventory_bags.game]},
-		{items.obsidian_glass[inventory_bags.game], '', items.obsidian_glass[inventory_bags.game]},
+		{items.steel_ingot[inventorybags.game], 'inventorybags:collecting_upgrade', items.steel_ingot[inventorybags.game]},
+		{items.steel_ingot[inventorybags.game], 'inventorybags:item_puller', items.steel_ingot[inventorybags.game]},
+		{items.obsidian_glass[inventorybags.game], '', items.obsidian_glass[inventorybags.game]},
 	}
 })
 
@@ -150,7 +150,7 @@ minetest.register_craft({
 	output = 'inventorybags:sorting_upgrade',
 	recipe = {
 		{'', 'inventorybags:upgrade_base', ''},
-		{items.steel_ladder[inventory_bags.game], items.steel_ladder[inventory_bags.game], items.steel_ladder[inventory_bags.game]},
+		{items.steel_ladder[inventorybags.game], items.steel_ladder[inventorybags.game], items.steel_ladder[inventorybags.game]},
 		{'group:wool', 'inventorybags:item_filter', 'group:wool'},
 	}
 })
@@ -159,8 +159,8 @@ minetest.register_craft({
 	output = 'inventorybags:autocrafting_upgrade',
 	recipe = {
 		{'group:wood', 'group:wood', 'group:wood'},
-		{items.steel_ingot[inventory_bags.game], items.mese_crystal[inventory_bags.game], items.steel_ingot[inventory_bags.game]},
-		{items.steel_ingot[inventory_bags.game], 'inventorybags:upgrade_base', items.steel_ingot[inventory_bags.game]},
+		{items.steel_ingot[inventorybags.game], items.mese_crystal[inventorybags.game], items.steel_ingot[inventorybags.game]},
+		{items.steel_ingot[inventorybags.game], 'inventorybags:upgrade_base', items.steel_ingot[inventorybags.game]},
 	}
 })
 
@@ -176,8 +176,8 @@ end
 minetest.register_craft({
 	output = 'inventorybags:dumping_upgrade',
 	recipe = {
-		{items.steel_ingot[inventory_bags.game], 'inventorybags:upgrade_base', items.steel_ingot[inventory_bags.game]},
-		{items.steel_ingot[inventory_bags.game], 'inventorybags:item_puller', items.steel_ingot[inventory_bags.game]},
+		{items.steel_ingot[inventorybags.game], 'inventorybags:upgrade_base', items.steel_ingot[inventorybags.game]},
+		{items.steel_ingot[inventorybags.game], 'inventorybags:item_puller', items.steel_ingot[inventorybags.game]},
 		{'group:stone', 'bucket:bucket_lava', 'group:stone'},
 	},
 	replacements = {{"bucket:bucket_lava", "bucket:bucket_empty"}},
@@ -200,61 +200,61 @@ minetest.register_craft({
 minetest.register_craft({
 	output = 'inventorybags:opening_sound_upgrade',
 	recipe = {
-		{'', '', items.steel_ingot[inventory_bags.game]},
-		{'inventorybags:upgrade_base', items.steel_ingot[inventory_bags.game], items.paper[inventory_bags.game]},
-		{'', '', items.steel_ingot[inventory_bags.game]},
+		{'', '', items.steel_ingot[inventorybags.game]},
+		{'inventorybags:upgrade_base', items.steel_ingot[inventorybags.game], items.paper[inventorybags.game]},
+		{'', '', items.steel_ingot[inventorybags.game]},
 	}
 })
 
 minetest.register_craft({
 	output = 'inventorybags:refilling_upgrade',
 	recipe = {
-		{items.bronze_ingot[inventory_bags.game], 'inventorybags:item_puller', items.bronze_ingot[inventory_bags.game]},
-		{items.bronze_ingot[inventory_bags.game], 'inventorybags:upgrade_base', items.bronze_ingot[inventory_bags.game]},
+		{items.bronze_ingot[inventorybags.game], 'inventorybags:item_puller', items.bronze_ingot[inventorybags.game]},
+		{items.bronze_ingot[inventorybags.game], 'inventorybags:upgrade_base', items.bronze_ingot[inventorybags.game]},
 	}
 })
 
 minetest.register_craft({
 	output = 'inventorybags:closing_sound_upgrade',
 	recipe = {
-		{items.steel_ingot[inventory_bags.game], '', ''},
-		{items.paper[inventory_bags.game], items.steel_ingot[inventory_bags.game], 'inventorybags:upgrade_base'},
-		{items.steel_ingot[inventory_bags.game], '', ''},
+		{items.steel_ingot[inventorybags.game], '', ''},
+		{items.paper[inventorybags.game], items.steel_ingot[inventorybags.game], 'inventorybags:upgrade_base'},
+		{items.steel_ingot[inventorybags.game], '', ''},
 	}
 })
 
-if minetest.registered_items["inventorybags:explosion_upgrade"] or inventory_bags.game == "mcl" then
+if minetest.registered_items["inventorybags:explosion_upgrade"] or inventorybags.game == "mcl" then
 	minetest.register_craft({
 		type = "shapeless",
 		output = 'inventorybags:explosion_upgrade',
-		recipe = {"inventorybags:upgrade_base", items.gunpowder[inventory_bags.game], items.tnt[inventory_bags.game]},
+		recipe = {"inventorybags:upgrade_base", items.gunpowder[inventorybags.game], items.tnt[inventorybags.game]},
 	})
 end
 
 minetest.register_craft({
 	output = 'inventorybags:storage_upgrade_tier_1',
 	recipe = {
-		{items.steel_block[inventory_bags.game], 'inventorybags:large_pouch', items.steel_block[inventory_bags.game]},
+		{items.steel_block[inventorybags.game], 'inventorybags:large_pouch', items.steel_block[inventorybags.game]},
 		{'inventorybags:large_pouch', 'inventorybags:upgrade_base', 'inventorybags:large_pouch'},
-		{items.steel_block[inventory_bags.game], 'inventorybags:large_pouch', items.steel_block[inventory_bags.game]},
+		{items.steel_block[inventorybags.game], 'inventorybags:large_pouch', items.steel_block[inventorybags.game]},
 	}
 })
 
 minetest.register_craft({
 	output = 'inventorybags:storage_upgrade_tier_2',
 	recipe = {
-		{items.gold_block[inventory_bags.game], 'inventorybags:large_pouch', items.gold_block[inventory_bags.game]},
+		{items.gold_block[inventorybags.game], 'inventorybags:large_pouch', items.gold_block[inventorybags.game]},
 		{'inventorybags:large_pouch', 'inventorybags:storage_upgrade_tier_1', 'inventorybags:large_pouch'},
-		{items.gold_block[inventory_bags.game], 'inventorybags:large_pouch', items.gold_block[inventory_bags.game]},
+		{items.gold_block[inventorybags.game], 'inventorybags:large_pouch', items.gold_block[inventorybags.game]},
 	}
 })
 
 minetest.register_craft({
 	output = 'inventorybags:storage_upgrade_tier_3',
 	recipe = {
-		{items.diamond_block[inventory_bags.game], 'inventorybags:large_pouch', items.diamond_block[inventory_bags.game]},
+		{items.diamond_block[inventorybags.game], 'inventorybags:large_pouch', items.diamond_block[inventorybags.game]},
 		{'inventorybags:large_pouch', 'inventorybags:storage_upgrade_tier_2', 'inventorybags:large_pouch'},
-		{items.diamond_block[inventory_bags.game], 'inventorybags:large_pouch', items.diamond_block[inventory_bags.game]},
+		{items.diamond_block[inventorybags.game], 'inventorybags:large_pouch', items.diamond_block[inventorybags.game]},
 	}
 })
 
@@ -320,9 +320,9 @@ minetest.register_craft({
 minetest.register_craft({
 	output = 'inventorybags:suitcase',
 	recipe = {
-		{items.steel_ingot[inventory_bags.game], items.steel_ingot[inventory_bags.game], items.steel_ingot[inventory_bags.game]},
+		{items.steel_ingot[inventorybags.game], items.steel_ingot[inventorybags.game], items.steel_ingot[inventorybags.game]},
 		{'inventorybags:large_pouch', 'inventorybags:fabric', 'inventorybags:large_pouch'},
-		{items.steel_ingot[inventory_bags.game], items.steel_ingot[inventory_bags.game], items.steel_ingot[inventory_bags.game]},
+		{items.steel_ingot[inventorybags.game], items.steel_ingot[inventorybags.game], items.steel_ingot[inventorybags.game]},
 	},
 })
 
@@ -358,7 +358,7 @@ minetest.register_craft({
 	recipe = {
 		{'inventorybags:yarn', '', 'inventorybags:yarn'},
 		{'group:wood', 'group:wood', 'group:wood'},
-		{'inventorybags:large_pouch', items.chest[inventory_bags.game], 'inventorybags:large_pouch'},
+		{'inventorybags:large_pouch', items.chest[inventorybags.game], 'inventorybags:large_pouch'},
 	},
 })
 
@@ -374,9 +374,9 @@ minetest.register_craft({
 minetest.register_craft({
 	output = 'inventorybags:paper_bag',
 	recipe = {
-		{items.paper[inventory_bags.game], '', items.paper[inventory_bags.game]},
-		{items.paper[inventory_bags.game], items.paper[inventory_bags.game], items.paper[inventory_bags.game]},
-		{items.paper[inventory_bags.game], items.paper[inventory_bags.game], items.paper[inventory_bags.game]},
+		{items.paper[inventorybags.game], '', items.paper[inventorybags.game]},
+		{items.paper[inventorybags.game], items.paper[inventorybags.game], items.paper[inventorybags.game]},
+		{items.paper[inventorybags.game], items.paper[inventorybags.game], items.paper[inventorybags.game]},
 	},
 })
 
@@ -405,9 +405,9 @@ if minetest.settings:get_bool("inventorybags_enable_item_teleportation_bag", fal
 	minetest.register_craft({
 		output = 'inventorybags:item_teleportation_bag',
 		recipe = {
-			{items.diamond[inventory_bags.game], 'inventorybags:large_pouch', items.diamond[inventory_bags.game]},
-			{items.diamond[inventory_bags.game], 'inventorybags:inventory_connecter', items.diamond[inventory_bags.game]},
-			{items.diamond[inventory_bags.game], items.mese_block[inventory_bags.game], items.diamond[inventory_bags.game]},
+			{items.diamond[inventorybags.game], 'inventorybags:large_pouch', items.diamond[inventorybags.game]},
+			{items.diamond[inventorybags.game], 'inventorybags:inventory_connecter', items.diamond[inventorybags.game]},
+			{items.diamond[inventorybags.game], items.mese_block[inventorybags.game], items.diamond[inventorybags.game]},
 		},
 	})
 	if minetest.get_modpath("pipeworks") then
@@ -419,11 +419,11 @@ if minetest.settings:get_bool("inventorybags_enable_item_teleportation_bag", fal
 	end
 end
 
-if minetest.get_modpath("xdecor") or inventory_bags.game == "mcl" then
+if minetest.get_modpath("xdecor") or inventorybags.game == "mcl" then
 	minetest.register_craft({
 		type = "shapeless",
 		output = 'inventorybags:ender_bag',
-		recipe = {"inventorybags:large_pouch", "inventorybags:inventory_connecter", items.ender_chest[inventory_bags.game]},
+		recipe = {"inventorybags:large_pouch", "inventorybags:inventory_connecter", items.ender_chest[inventorybags.game]},
 	})
 end
 
@@ -435,11 +435,11 @@ if minetest.get_modpath("more_chests") then
 	})
 end
 
-if minetest.get_modpath("beds") or inventory_bags.game == "mcl" then
+if minetest.get_modpath("beds") or inventorybags.game == "mcl" then
 	minetest.register_craft({
 		output = 'inventorybags:sleeping_bag',
 		recipe = {
-			{items.red_wool[inventory_bags.game], items.red_wool[inventory_bags.game], items.white_wool[inventory_bags.game]},
+			{items.red_wool[inventorybags.game], items.red_wool[inventorybags.game], items.white_wool[inventorybags.game]},
 			{"", "inventorybags:large_pouch", ""}
 		},
 	})
@@ -450,13 +450,13 @@ if minetest.get_modpath("beds") or inventory_bags.game == "mcl" then
 		recipe = {"inventorybags:large_pouch", "group:bed"},
 	})
 end
-if not minetest.settings:get_bool("inventorybags_disable_bag_of_winds", false) and inventory_bags.game ~= "mcl" then
+if not minetest.settings:get_bool("inventorybags_disable_bag_of_winds", false) and inventorybags.game ~= "mcl" then
 	minetest.register_craft({
 		output = 'inventorybags:bag_of_winds_closed',
 		recipe = {
-			{items.gold_block[inventory_bags.game], "inventorybags:large_pouch", items.gold_block[inventory_bags.game]},
-			{items.diamond_block[inventory_bags.game], items.mese_block[inventory_bags.game], items.diamond_block[inventory_bags.game]},
-			{items.diamond_block[inventory_bags.game], items.mese_block[inventory_bags.game], items.diamond_block[inventory_bags.game]}
+			{items.gold_block[inventorybags.game], "inventorybags:large_pouch", items.gold_block[inventorybags.game]},
+			{items.diamond_block[inventorybags.game], items.mese_block[inventorybags.game], items.diamond_block[inventorybags.game]},
+			{items.diamond_block[inventorybags.game], items.mese_block[inventorybags.game], items.diamond_block[inventorybags.game]}
 		},
 	})
 end
