@@ -50,24 +50,28 @@ local function open_spinning_wheel(user)
 	local inv = minetest.get_inventory({type="player", name=playername})
 	inv:set_size(invname.."_in", 1)
 	inv:set_size(invname.."_out", 4)
-		
-	minetest.show_formspec(playername, invname,
-		"size[8,7]" ..
-		default.gui_bg ..
-		default.gui_bg_img ..
-		default.gui_slots ..
-		"list[current_player;"..invname.."_in;1,0.8;1,1;]" ..
-		"item_image[1,0.8;1,1;wool:white]" ..
-		"button[3,0.8;1,1;spin;Spin]" ..
-		"list[current_player;"..invname.."_out;5,0.3;2,2;]" ..
-		"list[current_player;main;0,2.85;8,1;]" ..
-		"list[current_player;main;0,4.08;8,3;8]" ..
-		"listring[current_player;"..invname.."_out]" ..
-		"listring[current_player;main]" ..
-		"listring[current_player;"..invname.."_in]" ..
-		"listring[current_player;main]" ..
-		default.get_hotbar_bg(0,2.85)
-	)
+	local spinning_wheel_formspec = "size["..inventory_bags.width..",7]" ..
+	inventory_bags.gui_bg ..
+	inventory_bags.gui_bg_img ..
+	inventory_bags.gui_slots ..
+	"list[current_player;"..invname.."_in;1,0.8;1,1;]" ..
+	"button[3,0.8;1,1;spin;Spin]" ..
+	"list[current_player;"..invname.."_out;5,0.3;2,2;]"..
+	inventory_bags.inventory_formspec(2.85)
+	if inventory_bags.game == "mtg" then
+		spinning_wheel_formspec = spinning_wheel_formspec.."item_image[1,0.8;1,1;wool:white]"
+	else
+		spinning_wheel_formspec = spinning_wheel_formspec..
+		"item_image[1,0.8;1,1;mcl_wool:white]" ..
+		mcl_formspec.get_itemslot_bg(1,0.8,1,1)..
+		mcl_formspec.get_itemslot_bg(5,0.3,2,2)
+	end
+	spinning_wheel_formspec = spinning_wheel_formspec..
+	"listring[current_player;"..invname.."_out]" ..
+	"listring[current_player;main]" ..
+	"listring[current_player;"..invname.."_in]" ..
+	"listring[current_player;main]"
+	minetest.show_formspec(playername, invname, spinning_wheel_formspec)
 end
 
 minetest.register_craftitem("inventorybags:spinning_wheel", {
@@ -87,25 +91,28 @@ local function open_loom(user)
 	local inv = minetest.get_inventory({type="player", name=playername})
 	inv:set_size(invname.."_in", 2)
 	inv:set_size(invname.."_out", 4)
-	
-	minetest.show_formspec(playername, invname,
-		"size[8,7]" ..
-		default.gui_bg ..
-		default.gui_bg_img ..
-		default.gui_slots ..
-		"list[current_player;"..invname.."_in;1,0.3;1,2;]" ..
-		"item_image[1,0.3;1,1;inventorybags:yarn]" ..
-		"item_image[1,1.3;1,1;inventorybags:yarn]" ..
-		"button[3,0.8;1,1;weave;Weave]" ..
-		"list[current_player;"..invname.."_out;5,0.3;2,2;]" ..
-		"list[current_player;main;0,2.85;8,1;]" ..
-		"list[current_player;main;0,4.08;8,3;8]" ..
-		"listring[current_player;"..invname.."_out]" ..
-		"listring[current_player;main]" ..
-		"listring[current_player;"..invname.."_in]" ..
-		"listring[current_player;main]" ..
-		default.get_hotbar_bg(0,2.85)
-	)
+
+	local loom_formspec = "size["..inventory_bags.width..",7]" ..
+	inventory_bags.gui_bg ..
+	inventory_bags.gui_bg_img ..
+	inventory_bags.gui_slots ..
+	"list[current_player;"..invname.."_in;1,0.3;1,2;]" ..
+	"item_image[1,0.3;1,1;inventorybags:yarn]" ..
+	"item_image[1,1.3;1,1;inventorybags:yarn]" ..
+	"button[3,0.8;1,1;weave;Weave]"..
+	"list[current_player;"..invname.."_out;5,0.3;2,2;]"..
+	inventory_bags.inventory_formspec(2.85)
+	if inventory_bags.game == "mcl" then
+		loom_formspec = loom_formspec..
+		mcl_formspec.get_itemslot_bg(1,0.3,1,2)..
+		mcl_formspec.get_itemslot_bg(5,0.3,2,2)
+	end
+	loom_formspec = loom_formspec..
+	"listring[current_player;"..invname.."_out]" ..
+	"listring[current_player;main]" ..
+	"listring[current_player;"..invname.."_in]" ..
+	"listring[current_player;main]"
+	minetest.show_formspec(playername, invname,	loom_formspec)
 end
 
 minetest.register_craftitem("inventorybags:loom", {
@@ -127,11 +134,10 @@ local function open_bud(user)
 	inv:set_size(invname.."_bag", 1)
 	inv:set_size(invname.."_upgrade", 1)
 	inv:set_size(invname.."_out", 1)
-	minetest.show_formspec(playername, invname,
-		"size[8,7]" ..
-		default.gui_bg ..
-		default.gui_bg_img ..
-		default.gui_slots ..
+	local bud_formspec = "size["..inventory_bags.width..",7]" ..
+		inventory_bags.gui_bg ..
+		inventory_bags.gui_bg_img ..
+		inventory_bags.gui_slots ..
 		"field[0.4,2.2;3.2,0;setting;Setting;"..setting_default.."]" ..
 		"field_close_on_enter[setting;false]" ..
 		"item_image[0.5,0.3;1,1;inventorybags:large_pouch]" ..
@@ -143,17 +149,22 @@ local function open_bud(user)
 		"button[6.3,1.4;1.8,1;recover_setting;Recover Setting]" ..
 		"list[current_player;"..invname.."_bag;0.5,0.3;1,1;]" ..
 		"list[current_player;"..invname.."_upgrade;2,0.3;1,1;]" ..
-		"list[current_player;"..invname.."_out;6.5,0.3;1,1;]" ..
-		"list[current_player;main;0,2.85;8,1;]" ..
-		"list[current_player;main;0,4.08;8,3;8]" ..
-		"listring[current_player;"..invname.."_out]" ..
-		"listring[current_player;main]" ..
-		"listring[current_player;"..invname.."_bag]" ..
-		"listring[current_player;main]" ..
-		"listring[current_player;"..invname.."_upgrade]" ..
-		"listring[current_player;main]" ..
-		default.get_hotbar_bg(0,2.85)
-	)
+		"list[current_player;"..invname.."_out;6.5,0.3;1,1;]"..
+		inventory_bags.inventory_formspec(2.85)
+	if inventory_bags.game == "mcl" then
+		bud_formspec = bud_formspec..
+		mcl_formspec.get_itemslot_bg(0.5,0.3,1,1)..
+		mcl_formspec.get_itemslot_bg(2,0.3,1,1)..
+		mcl_formspec.get_itemslot_bg(6.5,0.3,1,1)
+	end
+	bud_formspec = bud_formspec..
+	"listring[current_player;"..invname.."_out]" ..
+	"listring[current_player;main]" ..
+	"listring[current_player;"..invname.."_bag]" ..
+	"listring[current_player;main]" ..
+	"listring[current_player;"..invname.."_upgrade]" ..
+	"listring[current_player;main]"
+	minetest.show_formspec(playername, invname, bud_formspec)
 end
 
 minetest.register_craftitem("inventorybags:bud", {
@@ -226,10 +237,10 @@ local function show_setting_creator(player, setting_type, extra_table)
 		end
 		local color_list = "textlist[0,0;7.5,2;color_list;"..colorss..";"..extra_table.color_index..";false]"
 		minetest.show_formspec(playername, invname.."_color",
-			"size[8,9]" ..
-			default.gui_bg ..
-			default.gui_bg_img ..
-			default.gui_slots ..
+			"size["..inventory_bags.width..",9]" ..
+			inventory_bags.gui_bg ..
+			inventory_bags.gui_bg_img ..
+			inventory_bags.gui_slots ..
 			"field[0.2,4.3;4.3,0;setting;Setting;"..setting_default.."]" ..
 			"field_close_on_enter[setting;false]" ..
 			"field[0.2,3.1;1.4,0;red;Red (0-255);"..extra_table.red.."]" ..
@@ -244,9 +255,7 @@ local function show_setting_creator(player, setting_type, extra_table)
 			"button[6,3.5;2,1;back;Back and Save]" ..
 			"button[4.2,2.4;1.6,1;set_color;Set Color]" ..
 			"button[6,2.4;2,1;random_color;Random Color]" ..
-			"list[current_player;main;0,4.85;8,1;]" ..
-			"list[current_player;main;0,6.08;8,3;8]" ..
-			default.get_hotbar_bg(0,4.85)
+			inventory_bags.inventory_formspec(4.85)
 		)
 	elseif setting_type == "filter" then
 		local finv = minetest.create_detached_inventory(invname.."_filter", {
@@ -284,33 +293,35 @@ local function show_setting_creator(player, setting_type, extra_table)
 				finv:set_stack("blacklist", i-setting_table.blacklist_counter+1, stack)
 			end
 		end
-		minetest.show_formspec(playername, invname.."_filter",
-			"size[12,11]" ..
-			default.gui_bg ..
-			default.gui_bg_img ..
-			default.gui_slots ..
-			"label[0.2,0.1;Whitelist:          (An empty whitelist doesn't block any item)]"..
-			"label[6.2,0.1;Blacklist:]"..
-			"box[0,0;5.8,5.4;white]" ..
-			"box[6,0;5.8,5.4;black]" ..
-			"box[0.1,0.1;5.6,5.2;black]" ..
-			"box[6.1,0.1;5.6,5.2;#6B6B6B]" ..
-			"label[0.2,0.4;"..minetest.formspec_escape('comma separated lists for example: "moreblocks,default,technic"').."]"..
-			"label[6.2,0.4;"..minetest.formspec_escape('comma separated lists for example: "tree,stone,sand,stick"').."]"..
-			"field[0.5,1.3;5.6,1;group_filter_whitelist;Group Filter:;"..group_filter_whitelist_default.."]" ..
-			"field[0.5,2.3;5.6,1;mod_filter_whitelist;Mod Filter:;"..mod_filter_whitelist_default.."]" ..
-			"field[0.5,3.3;5.6,1;name_filter_whitelist;Name Filter:;"..name_filter_whitelist_default.."]" ..
-			"field[6.5,1.3;5.6,1;group_filter_blacklist;Group Filter:;"..group_filter_blacklist_default.."]" ..
-			"field[6.5,2.3;5.6,1;mod_filter_blacklist;Mod Filter:;"..mod_filter_blacklist_default.."]" ..
-			"field[6.5,3.3;5.6,1;name_filter_blacklist;Name Filter:;"..name_filter_blacklist_default.."]" ..
+		local function colorize(color, string) --just to make it shorter
+			return minetest.formspec_escape(minetest.colorize(color, string))
+		end
+		local filter_formspec = "size[12,11]" ..
+			inventory_bags.gui_bg ..
+			inventory_bags.gui_bg_img ..
+			inventory_bags.gui_slots ..
+			"label[0.2,0.1;"..colorize("#313131", "Whitelist:          (An empty whitelist doesn't block any item)").."]"..
+			"label[6.2,0.1;"..colorize("#eeeeee", "Blacklist:").."]"..
+			"box[0,0;5.8,5.4;#bbbbbb]" ..
+			"box[6,0;5.8,5.4;#333333]" ..
+			"box[0.1,0.1;5.6,5.2;#ffffff]" ..
+			"box[6.1,0.1;5.6,5.2;#111111]" ..
+			"label[0.2,0.4;"..colorize("#313131", 'comma separated lists (e.g. "moreblocks,default,technic")').."]"..
+			"label[6.2,0.4;"..colorize("#eeeeee", 'comma separated lists (e.g. "tree,stone,sand,stick")').."]"..
+			"field[0.5,1.3;5.6,1;group_filter_whitelist;"..colorize("#313131", "Group Filter:")..";"..group_filter_whitelist_default.."]" ..
+			"field[0.5,2.3;5.6,1;mod_filter_whitelist;"..colorize("#313131", "Mod Filter:")..";"..mod_filter_whitelist_default.."]" ..
+			"field[0.5,3.3;5.6,1;name_filter_whitelist;"..colorize("#313131", "Name Filter:")..";"..name_filter_whitelist_default.."]" ..
+			"field[6.5,1.3;5.6,1;group_filter_blacklist;"..colorize("#eeeeee", "Group Filter:")..";"..group_filter_blacklist_default.."]" ..
+			"field[6.5,2.3;5.6,1;mod_filter_blacklist;"..colorize("#eeeeee", "Mod Filter:")..";"..mod_filter_blacklist_default.."]" ..
+			"field[6.5,3.3;5.6,1;name_filter_blacklist;"..colorize("#eeeeee", "Name Filter:")..";"..name_filter_blacklist_default.."]"..
 			"field_close_on_enter[group_filter_whitelist;false]" ..
 			"field_close_on_enter[mod_filter_whitelist;false]" ..
 			"field_close_on_enter[name_filter_whitelist;false]" ..
 			"field_close_on_enter[group_filter_blacklist;false]" ..
 			"field_close_on_enter[mod_filter_blacklist;false]" ..
 			"field_close_on_enter[name_filter_blacklist;false]" ..
-			"label[0.24,3.8;Item Filter:]"..
-			"label[6.24,3.8;Item Filter:]"..
+			"label[0.24,3.8;"..colorize("#313131","Item Filter:").."]"..
+			"label[6.24,3.8;"..colorize("#eeeeee","Item Filter:").."]"..
 			"list[detached:"..invname.."_filter;whitelist;1,4.3;4,1;]" ..
 			"list[detached:"..invname.."_filter;blacklist;7,4.3;4,1;]" ..
 			"listring[detached:"..invname.."_filter;blacklist]" ..
@@ -325,11 +336,14 @@ local function show_setting_creator(player, setting_type, extra_table)
 			"button[11,4.3;0.8,1;next_blacklist;-->]" ..
 			"field[2.2,6.3;6,0;setting;Setting;"..setting_default.."]" ..
 			"field_close_on_enter[setting;false]" ..
-			"button[8,5.5;2,1;back;Back and Save]" ..
-			"list[current_player;main;2,6.85;8,1;]" ..
-			"list[current_player;main;2,8.08;8,3;8]" ..
-			default.get_hotbar_bg(2,6.85)
-		)
+			"button[8,5.5;2,1;back;Back and Save]"..
+			inventory_bags.inventory_formspec(6.85)
+		if inventory_bags.game == "mcl" then
+			filter_formspec = filter_formspec..
+			mcl_formspec.get_itemslot_bg(1,4.3,4,1)..
+			mcl_formspec.get_itemslot_bg(7,4.3,4,1)
+		end
+		minetest.show_formspec(playername, invname.."_filter", filter_formspec)
 	elseif setting_type == "crafting" then
 		local craftinv = minetest.create_detached_inventory(invname.."_crafting", {
 			allow_move = function(inv, from_list, from_index, to_list, to_index, count, player)
@@ -364,11 +378,10 @@ local function show_setting_creator(player, setting_type, extra_table)
 			end
 		end
 		set_crafting_output(craftinv)
-		minetest.show_formspec(playername, invname.."_crafting",
-			"size[8,9]" ..
-			default.gui_bg ..
-			default.gui_bg_img ..
-			default.gui_slots ..
+		local crafting_formspec = "size[8,9]" ..
+			inventory_bags.gui_bg ..
+			inventory_bags.gui_bg_img ..
+			inventory_bags.gui_slots ..
 			"field[0.2,4.3;6,0;setting;Setting;"..setting_default.."]" ..
 			"field_close_on_enter[setting;false]" ..
 			"button[6,3.5;2,1;back;Back and Save]" ..
@@ -383,10 +396,13 @@ local function show_setting_creator(player, setting_type, extra_table)
 			"image[4.5,1.3;1,1;gui_furnace_arrow_bg.png^[transformR270]" ..
 			"list[detached:"..invname.."_crafting;recipe;1.5,0.3;3,3;]" ..
 			"list[detached:"..invname.."_crafting;output;5.5,1.3;1,1;]" ..
-			"list[current_player;main;0,4.85;8,1;]" ..
-			"list[current_player;main;0,6.08;8,3;8]" ..
-			default.get_hotbar_bg(0,4.85)
-		)
+			inventory_bags.inventory_formspec(4.85)
+		if inventory_bags.game == "mcl" then
+			crafting_formspec = crafting_formspec..
+			mcl_formspec.get_itemslot_bg(1.5,0.3,3,3)..
+			mcl_formspec.get_itemslot_bg(5.5,1.3,1,1)
+		end
+		minetest.show_formspec(playername, invname.."_crafting", crafting_formspec)
 	end
 end
 
@@ -509,9 +525,9 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 			end
 			minetest.show_formspec(playername, formname.."_help",
 				"size[10,8]" ..
-				default.gui_bg ..
-				default.gui_bg_img ..
-				default.gui_slots ..
+				inventory_bags.gui_bg ..
+				inventory_bags.gui_bg_img ..
+				inventory_bags.gui_slots ..
 				"textlist[0,0;10,8;helptext;".. inventorybags.upgrade_help_string ..";1;true]"
 			)
 		elseif fields.upgrade then

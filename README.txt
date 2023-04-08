@@ -10,6 +10,12 @@ License:
 	
 		Maciej Kasatkin / RealBadAngel ( GNU LGPLv2+ ) ( https://github.com/minetest-mods/technic/blob/master/technic_chests/register.lua ):
 			file: /inventorybags/sort_inventory_function.lua
+
+		MineClone 2 support: ThePython10110 (GPLv3)
+			Files: Parts of README.txt, mod.conf, settingtypes.txt, init.lua, crafting.lua, bags.lua, and devices.lua
+
+			Everything should work exactly the same way in MineClone as Minetest game, except for the fact that the
+			Bag of Winds does nothing (and is therefore disabled in MineClone)
 	
 		Everything else:
 		cx384 ( GNU GPLv3  )

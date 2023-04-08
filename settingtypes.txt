@@ -1,5 +1,7 @@
 # Defaut off, because it doesn't work very well
+# Most games do not let you move items to/from containers without being near them.
 inventorybags_enable_item_teleportation_bag(Enable Item Teleportation Bag) bool false
 
-# Used to dialable the Bag of Winds
-inventorybags_dialable_bag_of_winds(Dialables the Bag of Winds) bool false
+# Used to disable the Bag of Winds
+# Note: The Bag of Winds does not work in MineClone, and is therefore disabled regardless of this setting.
+inventorybags_disable_bag_of_winds(Disable Bag of Winds) bool false

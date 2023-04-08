@@ -1,22 +1,33 @@
 
 local function get_formspec(name, width, height)
-	local sizewidth = 8
+	local sizewidth = inventory_bags.width
 	local txpos = (sizewidth-width)/2
-	if width >= 8 then
+	if width >= inventory_bags.width then
 		sizewidth = width
 		txpos = 0
 	end
 	local bag_formspec =
 		"size[".. sizewidth ..",".. height+5 .."]" ..
-		default.gui_bg ..
-		default.gui_bg_img ..
-		default.gui_slots ..
-		"list[detached:"..name..";main;".. txpos ..",0;".. width ..",".. height ..";]"..
-		"list[current_player;main;".. (sizewidth-8)/2 ..",".. height+0.85 ..";8,1;]" ..
-		"list[current_player;main;".. (sizewidth-8)/2 ..",".. height+2.08 ..";8,3;8]" ..
+		inventory_bags.gui_bg ..
+		inventory_bags.gui_bg_img ..
+		inventory_bags.gui_slots ..
+		"list[detached:"..name..";main;".. txpos ..",0;".. width ..",".. height ..";]"
+		if inventory_bags.game == "mtg" then
+			bag_formspec = bag_formspec..
+			"list[current_player;main;".. (sizewidth-inventory_bags.width)/2 ..",".. height+0.85 ..";"..inventory_bags.width..",1;]" ..
+			"list[current_player;main;".. (sizewidth-inventory_bags.width)/2 ..",".. height+2.08 ..";"..inventory_bags.width..",3;"..inventory_bags.width.."]"..
+			inventory_bags.get_hotbar_bg((sizewidth-inventory_bags.width)/2,height+0.85)
+		else
+			bag_formspec = bag_formspec..
+			"list[current_player;main;".. (sizewidth-inventory_bags.width)/2 ..",".. height+0.85 ..";"..inventory_bags.width..",3;"..inventory_bags.width.."]"..
+			mcl_formspec.get_itemslot_bg((sizewidth-inventory_bags.width)/2, height+0.85,inventory_bags.width,3)..
+			"list[current_player;main;".. (sizewidth-inventory_bags.width)/2 ..",".. height+4.08 ..";"..inventory_bags.width..",1;]"..
+			mcl_formspec.get_itemslot_bg((sizewidth-inventory_bags.width)/2, height+4.08,inventory_bags.width,1)..
+			mcl_formspec.get_itemslot_bg(txpos, 0, width, height)
+		end
+		bag_formspec = bag_formspec..
 		"listring[detached:"..name..";main]"..
-		"listring[current_player;main]" ..
-		default.get_hotbar_bg((sizewidth-8)/2,height+0.85)
+		"listring[current_player;main]"
 	return bag_formspec
 end
 
@@ -178,6 +189,9 @@ local function open_bag(itemstack, user, width, height, sound)
 				if minetest.get_item_group(stack:get_name(), "bag") > 0 then
 					return 0
 				end
+				if minetest.get_item_group(stack:get_name(), "shulker_box") > 0 then
+					return 0
+				end
 			end
 			if not can_save_bag_inv(inv, player) then
 				return 0
@@ -202,6 +216,9 @@ local function open_bag(itemstack, user, width, height, sound)
 					end
 				else
 					if minetest.get_item_group(stack:get_name(), "bag") > 0 then
+						remove_stack = true
+					end
+					if minetest.get_item_group(stack:get_name(), "shulker_box") > 0 then
 						remove_stack = true
 					end
 				end
@@ -285,7 +302,7 @@ function inventorybags.register_bag(name, bagtable)
 	minetest.register_craftitem(name, {
 		description = bagtable.description,
 		inventory_image = bagtable.inventory_image,
-		groups = {bag = 1},
+		groups = {bag = 1, shulker_box = 1},
 		
 		on_secondary_use = function(itemstack, user)
 			return open_bag(itemstack, user, bagtable.width, bagtable.height, bagtable.sound_open)
@@ -440,7 +457,7 @@ end
 minetest.register_craftitem("inventorybags:bag_transporting_bag", {
 	description = "Bag Transporting Bag",
 	inventory_image = "inventorybags_bag_transporting_bag.png",
-	groups = {bag = 1, bag_bag = 1},
+	groups = {bag = 1, shulker_box = 1, bag_bag = 1},
 	
 	on_secondary_use = function(itemstack, user)
 		return open_bag(itemstack, user, 2, 2, "inventorybags_open_bag")
@@ -467,7 +484,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 	return
 end)
 
-if minetest.setting_getbool("inventorybags_enable_item_teleportation_bag") then
+if minetest.settings:get_bool("inventorybags_enable_item_teleportation_bag", false) then
 
 	local function open_teleport_bag_inv(itemstack, placer, pointed_thing)
 		local location = minetest.deserialize(itemstack:get_meta():get_string("inventorybags_formspec_location"))
@@ -511,7 +528,7 @@ if minetest.setting_getbool("inventorybags_enable_item_teleportation_bag") then
 	minetest.register_craftitem("inventorybags:item_teleportation_bag", {
 		description = "Item Teleportation Bag",
 		inventory_image = "inventorybags_item_teleportation_bag.png",
-		groups = {bag = 1},
+		groups = {bag = 1, shulker_box = 1},
 		
 		on_use = function(itemstack, user, pointed_thing)
 			if user:get_player_control().sneak == true then
@@ -548,42 +565,44 @@ if minetest.setting_getbool("inventorybags_enable_item_teleportation_bag") then
 	end)
 end
 
-if minetest.get_modpath("xdecor") then
+if minetest.get_modpath("xdecor") or inventory_bags.game == "mcl" then
+	local ender_chest_formspec
+	if inventory_bags.game == "mtg" then
+		ender_chest_formspec = "size[8,9]" ..
+		inventory_bags.gui_bg ..
+		inventory_bags.gui_bg_img ..
+		inventory_bags.gui_slots ..
+		"list[current_player;enderchest;0,0.3;8,4;]" ..
+		"list[current_player;main;0,4.85;8,1;]" ..
+		"list[current_player;main;0,6.08;8,3;8]" ..
+		"listring[current_player;enderchest]" ..
+		"listring[current_player;main]" ..
+		inventory_bags.get_hotbar_bg(0,4.85)
+	else
+		ender_chest_formspec = "size[9,8.75]"..
+		"label[0,0;"..minetest.formspec_escape(minetest.colorize("#313131", "Ender Bag")).."]"..
+		"list[current_player;enderchest;0,0.5;9,3;]"..
+		mcl_formspec.get_itemslot_bg(0,0.5,9,3)..
+		"label[0,4.0;"..minetest.formspec_escape(minetest.colorize("#313131", "Inventory")).."]"..
+		"list[current_player;main;0,4.5;9,3;9]"..
+		mcl_formspec.get_itemslot_bg(0,4.5,9,3)..
+		"list[current_player;main;0,7.74;9,1;]"..
+		mcl_formspec.get_itemslot_bg(0,7.74,9,1)..
+		"listring[current_player;enderchest]"..
+		"listring[current_player;main]"
+	end
 	minetest.register_craftitem("inventorybags:ender_bag", {
 		description = "Ender Bag",
 		inventory_image = "inventorybags_ender_bag.png",
-		groups = {bag = 1},
-		
+		groups = {bag = 1, shulker_box = 1},
 		on_secondary_use = function(itemstack, user)
 			minetest.sound_play("inventorybags_open_teleportation_bag", {gain = 0.8, object = user, max_hear_distance = 5})
-			minetest.show_formspec(user:get_player_name(), "inventorybags:ender_bag",
-				"size[8,9]" ..
-				default.gui_bg ..
-				default.gui_bg_img ..
-				default.gui_slots ..
-				"list[current_player;enderchest;0,0.3;8,4;]" ..
-				"list[current_player;main;0,4.85;8,1;]" ..
-				"list[current_player;main;0,6.08;8,3;8]" ..
-				"listring[current_player;enderchest]" ..
-				"listring[current_player;main]" ..
-				default.get_hotbar_bg(0,4.85)
-			)
+			minetest.show_formspec(user:get_player_name(), "inventorybags:ender_bag", ender_chest_formspec)
 			return itemstack
 		end,
 		on_place = function(itemstack, placer, pointed_thing)
 			minetest.sound_play("inventorybags_open_teleportation_bag", {gain = 0.8, object = placer, max_hear_distance = 5})
-			minetest.show_formspec(placer:get_player_name(), "inventorybags:ender_bag",
-				"size[8,9]" ..
-				default.gui_bg ..
-				default.gui_bg_img ..
-				default.gui_slots ..
-				"list[current_player;enderchest;0,0.3;8,4;]" ..
-				"list[current_player;main;0,4.85;8,1;]" ..
-				"list[current_player;main;0,6.08;8,3;8]" ..
-				"listring[current_player;enderchest]" ..
-				"listring[current_player;main]" ..
-				default.get_hotbar_bg(0,4.85)
-			)
+			minetest.show_formspec(placer:get_player_name(), "inventorybags:ender_bag", ender_chest_formspec)
 			return itemstack
 		end
 	})
@@ -603,21 +622,21 @@ if minetest.get_modpath("more_chests") then
 	minetest.register_craftitem("inventorybags:wifi_bag", {
 		description = "Wifi Bag",
 		inventory_image = "inventorybags_wifi_bag.png",
-		groups = {bag = 1},
+		groups = {bag = 1, shulker_box = 1},
 		
 		on_secondary_use = function(itemstack, user)
 			minetest.sound_play("inventorybags_open_teleportation_bag", {gain = 0.8, object = user, max_hear_distance = 5})
 			minetest.show_formspec(user:get_player_name(), "inventorybags:wifi_bag",
 				"size[8,9]" ..
-				default.gui_bg ..
-				default.gui_bg_img ..
-				default.gui_slots ..
+				inventory_bags.gui_bg ..
+				inventory_bags.gui_bg_img ..
+				inventory_bags.gui_slots ..
 				"list[current_player;more_chests:wifi;0,0.3;8,4;]" ..
 				"list[current_player;main;0,4.85;8,1;]" ..
 				"list[current_player;main;0,6.08;8,3;8]" ..
 				"listring[current_player;more_chests:wifi]" ..
 				"listring[current_player;main]" ..
-				default.get_hotbar_bg(0,4.85)
+				inventory_bags.get_hotbar_bg(0,4.85)
 			)
 			return itemstack
 		end,
@@ -625,15 +644,15 @@ if minetest.get_modpath("more_chests") then
 			minetest.sound_play("inventorybags_open_teleportation_bag", {gain = 0.8, object = placer, max_hear_distance = 5})
 			minetest.show_formspec(placer:get_player_name(), "inventorybags:wifi_bag",
 				"size[8,9]" ..
-				default.gui_bg ..
-				default.gui_bg_img ..
-				default.gui_slots ..
+				inventory_bags.gui_bg ..
+				inventory_bags.gui_bg_img ..
+				inventory_bags.gui_slots ..
 				"list[current_player;more_chests:wifi;0,0.3;8,4;]" ..
 				"list[current_player;main;0,4.85;8,1;]" ..
 				"list[current_player;main;0,6.08;8,3;8]" ..
 				"listring[current_player;more_chests:wifi]" ..
 				"listring[current_player;main]" ..
-				default.get_hotbar_bg(0,4.85)
+				inventory_bags.get_hotbar_bg(0,4.85)
 			)
 			return itemstack
 		end
@@ -649,24 +668,34 @@ if minetest.get_modpath("more_chests") then
 	end)
 end
 
-if minetest.get_modpath("beds") then
+if minetest.get_modpath("beds") or inventory_bags.game == "mcl" then
+	local bedfunction = cause_an_error_if_this_isnt_set
+	if minetest.get_modpath("beds") then
+		bedfunction = function(player)
+			beds.on_rightclick(player:get_pos(), player)
+		end
+	else
+		bedfunction = function(player)
+			mcl_beds.on_rightclick(player:get_pos(), player, false)
+		end
+	end
 	minetest.register_craftitem("inventorybags:sleeping_bag", {
 		description = "Sleeping Bag",
 		inventory_image = "inventorybags_sleeping_bag.png",
-		groups = {bag = 1},
+		groups = {bag = 1, shulker_box = 1},
 		
 		on_secondary_use = function(itemstack, user)
 			minetest.sound_play("inventorybags_sleeping", {gain = 1, object = user, max_hear_distance = 5})
-			beds.on_rightclick(user:get_pos(), user)
+			bedfunction(user)
 		end,
 		on_place = function(itemstack, placer, pointed_thing)
 			minetest.sound_play("inventorybags_sleeping", {gain = 1, object = placer, max_hear_distance = 5})
-			beds.on_rightclick(placer:get_pos(), placer)
+			bedfunction(placer)
 		end
 	})
 end
 
-if not minetest.setting_getbool("inventorybags_dialable_bag_of_winds") then
+if (not minetest.settings:get_bool("inventorybags_disable_bag_of_winds", false)) and (inventory_bags.game ~= "mcl") then
 
 	local gravity_change = -1.5
 
@@ -727,7 +756,7 @@ if not minetest.setting_getbool("inventorybags_dialable_bag_of_winds") then
 	minetest.register_craftitem("inventorybags:bag_of_winds_closed", {
 		description = "Bag of Winds",
 		inventory_image = "inventorybags_bag_of_winds_closed.png",
-		groups = {bag = 1},
+		groups = {bag = 1, shulker_box = 1},
 		on_secondary_use = function(itemstack, user, pointed_thing)
 			itemstack = open_bag_of_winds(user, itemstack)
 			return itemstack
@@ -741,7 +770,7 @@ if not minetest.setting_getbool("inventorybags_dialable_bag_of_winds") then
 	minetest.register_craftitem("inventorybags:bag_of_winds_opened", {
 		description = "Bag of Winds",
 		inventory_image = "inventorybags_bag_of_winds_opened.png",
-		groups = {bag = 1, not_in_creative_inventory = 1},
+		groups = {bag = 1, shulker_box = 1, not_in_creative_inventory = 1},
 		on_secondary_use = function(itemstack, user, pointed_thing)
 			itemstack = close_bag_of_winds(user, itemstack)
 			return itemstack
